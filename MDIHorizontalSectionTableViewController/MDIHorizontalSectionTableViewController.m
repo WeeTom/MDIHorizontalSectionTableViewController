@@ -32,6 +32,11 @@
 {
     self.pageControl.numberOfPages = self.sections.count;
     self.pageControl.currentPage = 0;
+    self.pageControl.pageIndicatorTintColor = [UIColor colorWithRed:(rand()%256)/256.0 green:(rand()%256)/256.0 blue:(rand()%256)/256.0 alpha:1];
+    self.pageControl.currentPageIndicatorTintColor = [UIColor colorWithRed:(rand()%256)/256.0 green:(rand()%256)/256.0 blue:(rand()%256)/256.0 alpha:1];
+    self.pageControl.center = CGPointMake(self.view.frame.size.width/2.0, self.view.frame.size.height - 20);
+    self.pageControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self.view addSubview:self.pageControl];
     self.scrollView.contentOffset = CGPointMake(0, 0);
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width*self.pageControl.numberOfPages, self.scrollView.frame.size.height);
     
@@ -354,9 +359,10 @@
             
             MDITableViewController *vc = [[MDITableViewController alloc] init];
             [self.tableVCs insertObject:vc atIndex:section];
-            vc.objects = array;
+            vc.delegate = self;
             vc.dataSoure = self;
             vc.movingViewDelegate = self;
+            vc.objects = array;
             [self addChildViewController:vc];
             vc.view.frame = CGRectMake(10, 60, mv.frame.size.width - 20, mv.frame.size.height - 80);
             [mv addSubview:vc.view];
