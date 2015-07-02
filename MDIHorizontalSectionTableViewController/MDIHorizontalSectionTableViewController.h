@@ -16,8 +16,10 @@
 @end
 
 @protocol MDIHorizontalSectionTableViewControllerDelegate <NSObject>
-- (void)hsTableViewControllerSectionViewOrderChanged:(MDIHorizontalSectionTableViewController *)controller;
-- (void)hsTableViewControllerDataOrderChanged:(MDIHorizontalSectionTableViewController *)controller;
+- (CGFloat)hsTableViewController:(MDIHorizontalSectionTableViewController *)controller tableView:(UITableView *)tableView heightForRowInSection:(NSInteger)section row:(NSInteger)row;
+- (void)hsTableViewController:(MDIHorizontalSectionTableViewController *)controller tableView:(UITableView *)tableView didSelectRowInSection:(NSInteger)section row:(NSInteger)row;
+- (void)hsTableViewControllerSectionViewOrderChanged:(MDIHorizontalSectionTableViewController *)controller section:(id)section;
+- (void)hsTableViewControllerDataOrderChanged:(MDIHorizontalSectionTableViewController *)controller data:(id)data;
 @end
 
 @interface MDIHorizontalSectionTableViewController : UIViewController
@@ -41,6 +43,8 @@
 - (void)updateData:(id)data inSection:(NSInteger)section row:(NSInteger)row;
 - (void)insertData:(NSArray *)datas inSection:(NSInteger)section row:(NSInteger)row;
 - (void)moveDataFromSection:(NSInteger)fromSection fromRow:(NSInteger)fromRow toSection:(NSInteger)toSection toRow:(NSInteger)toRow;
+
+- (void)scrollToSection:(NSInteger)section;
 
 - (MDIMovingView *)sectionViewInSection:(NSInteger)section;
 - (UITableView *)tableViewInSection:(NSInteger)section;

@@ -8,15 +8,14 @@
 
 #import "MDIHorizontalSectionTableViewController.h"
 
-@interface MDIHorizontalSectionTableViewController () <UIScrollViewDelegate, MovingViewDelegate, MDITableViewControllerDataSource>
+@interface MDIHorizontalSectionTableViewController () <UIScrollViewDelegate, MovingViewDelegate, MDITableViewControllerDataSource, MDITableViewControllerDelegate>
 @property (strong, nonatomic) UIScrollView *scrollView;
 @property (strong, nonatomic) UIPageControl *pageControl;
 @property (strong, nonatomic) MDIMovingView *movingView;
-@property (strong, nonatomic) NSMutableArray *movingViews, *folderTableVCs;
+@property (strong, nonatomic) NSMutableArray *movingViews, *shadowViews, *tableVCs;
 @property (strong, nonatomic) NSTimer *pageTimer;
 @end
 
-#define SHADOWTAGEXTEND 49991
 @implementation MDIHorizontalSectionTableViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -38,13 +37,14 @@
     
     NSMutableArray *array = [NSMutableArray array];
     NSMutableArray *mvcs = [NSMutableArray array];
+    NSMutableArray *shadows = [NSMutableArray array];
     for (int i = 0 ; i < self.pageControl.numberOfPages; i ++) {
         UIView *shadow = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.scrollView.frame.size.width - 20, self.scrollView.frame.size.height - 80)];
         shadow.backgroundColor = [UIColor grayColor];
         shadow.alpha = 1;
-        shadow.tag = i+SHADOWTAGEXTEND;
         CGPoint pageCenter = CGPointMake((i + 0.5)*self.scrollView.frame.size.width, self.scrollView.frame.size.height/2.0);
         shadow.center = pageCenter;
+        [shadows addObject:shadow];
         [self.scrollView addSubview:shadow];
         
         MDIMovingView *mv = [[MDIMovingView alloc] initWithFrame:CGRectMake(0, 0, self.scrollView.frame.size.width - 20, self.scrollView.frame.size.height - 80)];
@@ -58,14 +58,16 @@
         MDITableViewController *vc = [[MDITableViewController alloc] init];
         [mvcs addObject:vc];
         vc.objects = self.dataDic[self.sections[i]];
+        vc.delegate = self;
         vc.dataSoure = self;
         vc.movingViewDelegate = self;
         [self addChildViewController:vc];
         vc.view.frame = CGRectMake(10, 60, mv.frame.size.width - 20, mv.frame.size.height - 80);
         [mv addSubview:vc.view];
     }
+    self.shadowViews = shadows;
     self.movingViews = array;
-    self.folderTableVCs = mvcs;
+    self.tableVCs = mvcs;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -82,7 +84,7 @@
         [self.movingView.superview bringSubviewToFront:self.movingView];
         [UIView animateWithDuration:0.2 animations:^{
             self.movingView.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(0.02), 1.02, 1.02);
-            UIView *shaC = [self.scrollView viewWithTag:self.pageControl.currentPage+1];
+            UIView *shaC = self.shadowViews[self.pageControl.currentPage];
             shaC.alpha = 0.5;
         }];
     } else if (theMovingView.identity == 2) {
@@ -96,7 +98,7 @@
         [UIView animateWithDuration:0.2 animations:^{
             self.movingView.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(0.02), 1.02, 1.02);
         }];
-        MDITableViewController *vc = self.folderTableVCs[self.pageControl.currentPage];
+        MDITableViewController *vc = self.tableVCs[self.pageControl.currentPage];
         [vc movingViewDidStart:theMovingView];
     }
 }
@@ -104,7 +106,7 @@
 - (void)movingViewDidMove:(MDIMovingView *)theMovingView
 {
     if (theMovingView.identity == 2) {
-        MDITableViewController *vc = self.folderTableVCs[self.pageControl.currentPage];
+        MDITableViewController *vc = self.tableVCs[self.pageControl.currentPage];
         [vc movingViewDidMove:theMovingView];
     }
     float leftBorder = self.pageControl.currentPage*self.scrollView.frame.size.width;
@@ -135,20 +137,22 @@
         [self cancelTimer];
         [UIView animateWithDuration:0.2 animations:^{
             self.movingView.transform = CGAffineTransformRotate(CGAffineTransformMakeScale(1.0, 1.0), 0);
-            UIView *shaC = [self.scrollView viewWithTag:self.pageControl.currentPage+SHADOWTAGEXTEND];
+            UIView *shaC = self.shadowViews[self.pageControl.currentPage];
             shaC.alpha = 0;
             CGPoint pageCenter = CGPointMake((self.pageControl.currentPage + 0.5)*self.scrollView.frame.size.width, self.scrollView.frame.size.height/2.0);
             self.movingView.center = pageCenter;
         }];
-        [self.delegate hsTableViewControllerSectionViewOrderChanged:self];
+        [self.delegate hsTableViewControllerSectionViewOrderChanged:self section:self.sections[[self.movingViews indexOfObject:self.movingView]]];
+        self.movingView = nil;
     } else if (theMovingView.identity == 2) {
+        id data = self.movingView.userInfo[@"object"];
         [self cancelTimer];
         [UIView animateWithDuration:0.2 animations:^{
             self.movingView.transform = CGAffineTransformRotate(CGAffineTransformMakeScale(1.0, 1.0), 0);
         }];
-        MDITableViewController *vc = self.folderTableVCs[self.pageControl.currentPage];
+        MDITableViewController *vc = self.tableVCs[self.pageControl.currentPage];
         [vc movingViewDidEnd:theMovingView];
-        [self.delegate hsTableViewControllerDataOrderChanged:self];
+        [self.delegate hsTableViewControllerDataOrderChanged:self data:data];
     }
 }
 
@@ -169,10 +173,10 @@
     if (self.movingView.identity == 1) {
         if (self.pageControl.currentPage < self.pageControl.numberOfPages - 1) {
             [UIView animateWithDuration:0.2 animations:^{
-                UIView *shaC = [self.scrollView viewWithTag:self.pageControl.currentPage+SHADOWTAGEXTEND];
+                UIView *shaC = self.shadowViews[self.pageControl.currentPage];
                 shaC.alpha = 0;
                 [shaC.superview sendSubviewToBack:shaC];
-                UIView *shaN = [self.scrollView viewWithTag:self.pageControl.currentPage+1+SHADOWTAGEXTEND];
+                UIView *shaN = self.shadowViews[self.pageControl.currentPage + 1];
                 shaN.alpha = 0.5;
                 [shaN.superview sendSubviewToBack:shaN];
                 
@@ -180,7 +184,6 @@
                 CGPoint lastCenter = self.movingView.center;
                 self.movingView.center = CGPointMake(lastCenter.x + self.scrollView.frame.size.width, lastCenter.y);
                 [self.movingView positionChanged:CGPointMake(self.scrollView.frame.size.width, 0)];
-                NSLog(@"moving to %.2f", self.movingView.frame.origin.x);
             } completion:^(BOOL finished) {
                 if (finished) {
                     [UIView animateWithDuration:0.2 animations:^{
@@ -188,7 +191,7 @@
                         CGPoint pageCenter = CGPointMake((self.pageControl.currentPage - 1 + 0.5)*self.scrollView.frame.size.width, self.scrollView.frame.size.height/2.0);
                         movingN.center = pageCenter;
                         [self.sections exchangeObjectAtIndex:self.pageControl.currentPage - 1 withObjectAtIndex:self.pageControl.currentPage];
-                        [self.folderTableVCs exchangeObjectAtIndex:self.pageControl.currentPage - 1 withObjectAtIndex:self.pageControl.currentPage];
+                        [self.tableVCs exchangeObjectAtIndex:self.pageControl.currentPage - 1 withObjectAtIndex:self.pageControl.currentPage];
                         [self.movingViews exchangeObjectAtIndex:self.pageControl.currentPage - 1 withObjectAtIndex:self.pageControl.currentPage];
                     }];
                 }
@@ -201,12 +204,10 @@
                 CGPoint lastCenter = self.movingView.center;
                 self.movingView.center = CGPointMake(lastCenter.x + self.scrollView.frame.size.width, lastCenter.y);
                 [self.movingView positionChanged:CGPointMake(self.scrollView.frame.size.width, 0)];
-                NSLog(@"moving to %.2f", self.movingView.frame.origin.x);
             } completion:^(BOOL finished) {
                 if (finished) {
-                    MDITableViewController *vc = self.folderTableVCs[self.pageControl.currentPage - 1];
+                    MDITableViewController *vc = self.tableVCs[self.pageControl.currentPage - 1];
                     [vc movingViewDidCancel:self.movingView];
-                    //todo
                 }
             }];
         }
@@ -219,10 +220,10 @@
     if (self.movingView.identity == 1) {
         if (self.pageControl.currentPage > 0) {
             [UIView animateWithDuration:0.2 animations:^{
-                UIView *shaC = [self.scrollView viewWithTag:self.pageControl.currentPage+SHADOWTAGEXTEND];
+                UIView *shaC = self.shadowViews[self.pageControl.currentPage];
                 shaC.alpha = 0;
                 [shaC.superview sendSubviewToBack:shaC];
-                UIView *shaP = [self.scrollView viewWithTag:self.pageControl.currentPage-1+SHADOWTAGEXTEND];
+                UIView *shaP = self.shadowViews[self.pageControl.currentPage - 1];
                 shaP.alpha = 0.5;
                 [shaP.superview sendSubviewToBack:shaP];
                 
@@ -230,7 +231,6 @@
                 CGPoint lastCenter = self.movingView.center;
                 self.movingView.center = CGPointMake(lastCenter.x - self.scrollView.frame.size.width, lastCenter.y);
                 [self.movingView positionChanged:CGPointMake(-self.scrollView.frame.size.width, 0)];
-                NSLog(@"moving to %.2f", self.movingView.frame.origin.x);
             } completion:^(BOOL finished) {
                 if (finished) {
                     [UIView animateWithDuration:0.2 animations:^{
@@ -238,7 +238,7 @@
                         CGPoint pageCenter = CGPointMake((self.pageControl.currentPage + 1 + 0.5)*self.scrollView.frame.size.width, self.scrollView.frame.size.height/2.0);
                         movingP.center = pageCenter;
                         [self.sections exchangeObjectAtIndex:self.pageControl.currentPage withObjectAtIndex:self.pageControl.currentPage + 1];
-                        [self.folderTableVCs exchangeObjectAtIndex:self.pageControl.currentPage withObjectAtIndex:self.pageControl.currentPage + 1];
+                        [self.tableVCs exchangeObjectAtIndex:self.pageControl.currentPage withObjectAtIndex:self.pageControl.currentPage + 1];
                         [self.movingViews exchangeObjectAtIndex:self.pageControl.currentPage withObjectAtIndex:self.pageControl.currentPage + 1];
                     }];
                 }
@@ -251,10 +251,9 @@
                 CGPoint lastCenter = self.movingView.center;
                 self.movingView.center = CGPointMake(lastCenter.x - self.scrollView.frame.size.width, lastCenter.y);
                 [self.movingView positionChanged:CGPointMake(-self.scrollView.frame.size.width, 0)];
-                NSLog(@"moving to %.2f", self.movingView.frame.origin.x);
             } completion:^(BOOL finished) {
                 if (finished) {
-                    MDITableViewController *vc = self.folderTableVCs[self.pageControl.currentPage + 1];
+                    MDITableViewController *vc = self.tableVCs[self.pageControl.currentPage + 1];
                     [vc movingViewDidCancel:self.movingView];
                 }
             }];
@@ -262,16 +261,27 @@
     }
 }
 
+#pragma mark -
+- (CGFloat)hsTableViewController:(MDITableViewController *)theController heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [self.delegate hsTableViewController:self tableView:theController.tableView heightForRowInSection:[self.tableVCs indexOfObject:theController] row:indexPath.row];
+}
+
+- (void)hsTableViewController:(MDITableViewController *)theController didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.delegate hsTableViewController:self tableView:theController.tableView didSelectRowInSection:[self.tableVCs indexOfObject:theController] row:indexPath.row];
+}
+
 #pragma mark - 
 - (void)renderCellForRowInRow:(NSInteger)row baseOnMovingView:(MDIMovingView *)parentView data:(id)data controller:(MDITableViewController *)controller
 {
-    [self.dataSource renderCellForRowInSection:[self.folderTableVCs indexOfObject:controller] row:row baseOnMovingView:parentView data:data];
+    [self.dataSource renderCellForRowInSection:[self.tableVCs indexOfObject:controller] row:row baseOnMovingView:parentView data:data];
 }
 
 #pragma mark -
 - (void)deleteSection:(NSInteger)section
 {
-    UIView *shaC = [self.scrollView viewWithTag:self.pageControl.numberOfPages - 1 + SHADOWTAGEXTEND];
+    UIView *shaC = self.shadowViews[self.pageControl.numberOfPages - 1];
     [shaC removeFromSuperview];
     
     [self.dataDic removeObjectForKey:self.sections[section]];
@@ -327,8 +337,8 @@
             UIView *shadow = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.scrollView.frame.size.width - 20, self.scrollView.frame.size.height - 80)];
             shadow.backgroundColor = [UIColor grayColor];
             shadow.alpha = 1;
-            shadow.tag = self.sections.count + SHADOWTAGEXTEND;
             shadow.center = CGPointMake((self.sections.count - 1 + 0.5)*self.scrollView.frame.size.width, self.scrollView.frame.size.height/2.0);
+            [self.shadowViews addObject:shadow];
             [self.scrollView addSubview:shadow];
             [self.scrollView sendSubviewToBack:shadow];
 
@@ -343,7 +353,7 @@
             [self.scrollView addSubview:mv];
             
             MDITableViewController *vc = [[MDITableViewController alloc] init];
-            [self.folderTableVCs insertObject:vc atIndex:section];
+            [self.tableVCs insertObject:vc atIndex:section];
             vc.objects = array;
             vc.dataSoure = self;
             vc.movingViewDelegate = self;
@@ -454,6 +464,14 @@
     }
 }
 
+- (void)scrollToSection:(NSInteger)section
+{
+    if (section >= self.sections.count) {
+        section = self.sections.count - 1;
+    }
+    [self.scrollView setContentOffset:CGPointMake(section*self.scrollView.frame.size.width, 0) animated:YES];
+}
+
 - (MDIMovingView *)sectionViewInSection:(NSInteger)section
 {
     return self.movingViews[section];
@@ -461,7 +479,7 @@
 
 - (UITableView *)tableViewInSection:(NSInteger)section
 {
-    return [self.folderTableVCs[section] tableView];
+    return [self.tableVCs[section] tableView];
 }
 
 - (MDIMovingView *)rowViewInSection:(NSInteger)section inRow:(NSInteger)row

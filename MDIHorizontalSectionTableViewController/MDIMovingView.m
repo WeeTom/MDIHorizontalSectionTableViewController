@@ -30,7 +30,6 @@ static CGPoint lastPosition;
     }
     switch (gesture.state) {
             case UIGestureRecognizerStateBegan:
-            self.backgroundColor = [UIColor redColor];
             moving = YES;
             lastPosition = [gesture locationInView:self.superview];
             [self.delegate movingViewDidStart:self];
@@ -38,7 +37,6 @@ static CGPoint lastPosition;
             case UIGestureRecognizerStateCancelled:
             break;
             case UIGestureRecognizerStateChanged:
-            self.backgroundColor = [UIColor greenColor];
             if (moving) {
                 CGPoint newPosition = [gesture locationInView:self.superview];
                 CGPoint lastCenter = self.center;
@@ -48,7 +46,6 @@ static CGPoint lastPosition;
             }
             break;
             case UIGestureRecognizerStateEnded:
-            self.backgroundColor = [UIColor blackColor];
             moving = NO;
             [self.delegate movingViewDidEnd:self];
             break;

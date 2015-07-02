@@ -14,10 +14,9 @@
 		F7C63DDB1B413E2500D028E7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7C63DDA1B413E2500D028E7 /* Images.xcassets */; };
 		F7C63DDE1B413E2500D028E7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7C63DDC1B413E2500D028E7 /* LaunchScreen.xib */; };
 		F7C63DEA1B413E2500D028E7 /* folderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F7C63DE91B413E2500D028E7 /* folderTests.m */; };
-		F7C63DF51B41404A00D028E7 /* MDIMovingView.m in Sources */ = {isa = PBXBuildFile; fileRef = F7C63DF41B41404A00D028E7 /* MDIMovingView.m */; };
-		F7C63DF71B41448800D028E7 /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7C63DF61B41448800D028E7 /* Reveal.framework */; };
-		F7C63DFA1B42383600D028E7 /* MDITableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7C63DF91B42383600D028E7 /* MDITableViewController.m */; };
-		F7D2BFC41B43B6DF003F3365 /* MDIHorizontalSectionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7D2BFC31B43B6DF003F3365 /* MDIHorizontalSectionTableViewController.m */; };
+		F7CFABF21B452D7C00A6C13C /* MDIHorizontalSectionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7CFABED1B452D7C00A6C13C /* MDIHorizontalSectionTableViewController.m */; };
+		F7CFABF31B452D7C00A6C13C /* MDIMovingView.m in Sources */ = {isa = PBXBuildFile; fileRef = F7CFABEF1B452D7C00A6C13C /* MDIMovingView.m */; };
+		F7CFABF41B452D7C00A6C13C /* MDITableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7CFABF11B452D7C00A6C13C /* MDITableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,13 +43,12 @@
 		F7C63DE31B413E2500D028E7 /* folderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = folderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7C63DE81B413E2500D028E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F7C63DE91B413E2500D028E7 /* folderTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = folderTests.m; sourceTree = "<group>"; };
-		F7C63DF31B41404A00D028E7 /* MDIMovingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDIMovingView.h; sourceTree = "<group>"; };
-		F7C63DF41B41404A00D028E7 /* MDIMovingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDIMovingView.m; sourceTree = "<group>"; };
-		F7C63DF61B41448800D028E7 /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
-		F7C63DF81B42383600D028E7 /* MDITableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDITableViewController.h; sourceTree = "<group>"; };
-		F7C63DF91B42383600D028E7 /* MDITableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDITableViewController.m; sourceTree = "<group>"; };
-		F7D2BFC21B43B6DF003F3365 /* MDIHorizontalSectionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDIHorizontalSectionTableViewController.h; sourceTree = "<group>"; };
-		F7D2BFC31B43B6DF003F3365 /* MDIHorizontalSectionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDIHorizontalSectionTableViewController.m; sourceTree = "<group>"; };
+		F7CFABEC1B452D7C00A6C13C /* MDIHorizontalSectionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDIHorizontalSectionTableViewController.h; sourceTree = "<group>"; };
+		F7CFABED1B452D7C00A6C13C /* MDIHorizontalSectionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDIHorizontalSectionTableViewController.m; sourceTree = "<group>"; };
+		F7CFABEE1B452D7C00A6C13C /* MDIMovingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDIMovingView.h; sourceTree = "<group>"; };
+		F7CFABEF1B452D7C00A6C13C /* MDIMovingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDIMovingView.m; sourceTree = "<group>"; };
+		F7CFABF01B452D7C00A6C13C /* MDITableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDITableViewController.h; sourceTree = "<group>"; };
+		F7CFABF11B452D7C00A6C13C /* MDITableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDITableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +56,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F7C63DF71B41448800D028E7 /* Reveal.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,7 +72,7 @@
 		F7C63DC11B413E2500D028E7 = {
 			isa = PBXGroup;
 			children = (
-				F7C63DF61B41448800D028E7 /* Reveal.framework */,
+				F7CFABEB1B452D7C00A6C13C /* MDIHorizontalSectionTableViewController */,
 				F7C63DCC1B413E2500D028E7 /* folder */,
 				F7C63DE61B413E2500D028E7 /* folderTests */,
 				F7C63DCB1B413E2500D028E7 /* Products */,
@@ -94,12 +91,6 @@
 		F7C63DCC1B413E2500D028E7 /* folder */ = {
 			isa = PBXGroup;
 			children = (
-				F7C63DF31B41404A00D028E7 /* MDIMovingView.h */,
-				F7C63DF41B41404A00D028E7 /* MDIMovingView.m */,
-				F7C63DF81B42383600D028E7 /* MDITableViewController.h */,
-				F7C63DF91B42383600D028E7 /* MDITableViewController.m */,
-				F7D2BFC21B43B6DF003F3365 /* MDIHorizontalSectionTableViewController.h */,
-				F7D2BFC31B43B6DF003F3365 /* MDIHorizontalSectionTableViewController.m */,
 				F7C63DD11B413E2500D028E7 /* AppDelegate.h */,
 				F7C63DD21B413E2500D028E7 /* AppDelegate.m */,
 				F7C63DD41B413E2500D028E7 /* ViewController.h */,
@@ -136,6 +127,19 @@
 				F7C63DE81B413E2500D028E7 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F7CFABEB1B452D7C00A6C13C /* MDIHorizontalSectionTableViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F7CFABEC1B452D7C00A6C13C /* MDIHorizontalSectionTableViewController.h */,
+				F7CFABED1B452D7C00A6C13C /* MDIHorizontalSectionTableViewController.m */,
+				F7CFABEE1B452D7C00A6C13C /* MDIMovingView.h */,
+				F7CFABEF1B452D7C00A6C13C /* MDIMovingView.m */,
+				F7CFABF01B452D7C00A6C13C /* MDITableViewController.h */,
+				F7CFABF11B452D7C00A6C13C /* MDITableViewController.m */,
+			);
+			path = MDIHorizontalSectionTableViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -238,11 +242,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F7CFABF41B452D7C00A6C13C /* MDITableViewController.m in Sources */,
+				F7CFABF21B452D7C00A6C13C /* MDIHorizontalSectionTableViewController.m in Sources */,
 				F7C63DD61B413E2500D028E7 /* ViewController.m in Sources */,
-				F7C63DFA1B42383600D028E7 /* MDITableViewController.m in Sources */,
-				F7D2BFC41B43B6DF003F3365 /* MDIHorizontalSectionTableViewController.m in Sources */,
+				F7CFABF31B452D7C00A6C13C /* MDIMovingView.m in Sources */,
 				F7C63DD31B413E2500D028E7 /* AppDelegate.m in Sources */,
-				F7C63DF51B41404A00D028E7 /* MDIMovingView.m in Sources */,
 				F7C63DD01B413E2500D028E7 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -31,12 +31,15 @@
 
 - (IBAction)action:(id)sender {
     // edit views by code
+//    [self.vc scrollToSection:random()%self.vc.sections.count];
 //    [self.vc moveSectionDataFromSection:1 toSection:0];
 //    [self.vc moveSectionDataFromSection:0 toSection:1];
-//    [self.vc insertSectionAtSection:@"X" atIndex:0 withDatas:@[@44]];
+//    [self.vc insertSectionAtSection:@"X" atIndex:self.vc.sections.count withDatas:@[@44]];
+
 //    NSMutableArray *array = self.vc.dataDic[self.vc.sections[0]];
 //    [array insertObject:@80 atIndex:0];
 //    [self.vc updateSection:0];
+
 //    [self.vc deleteSection:self.vc.sections.count - 1];
 //    [self.vc deleteDataInSection:0 row:0];
 //    [self.vc updateData:@90 inSection:0 row:0];
@@ -45,15 +48,27 @@
 }
 
 #pragma mark - Delegate
-- (void)hsTableViewControllerSectionViewOrderChanged:(MDIHorizontalSectionTableViewController *)controller
+- (CGFloat)hsTableViewController:(MDIHorizontalSectionTableViewController *)controller tableView:(UITableView *)tableView heightForRowInSection:(NSInteger)section row:(NSInteger)row
 {
-    //NSArray *sections = controller.sections;
+    return 90;
 }
 
-- (void)hsTableViewControllerDataOrderChanged:(MDIHorizontalSectionTableViewController *)controller
+- (void)hsTableViewController:(MDIHorizontalSectionTableViewController *)controller tableView:(UITableView *)tableView didSelectRowInSection:(NSInteger)section row:(NSInteger)row
+{
+    [tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] animated:YES];
+}
+
+- (void)hsTableViewControllerSectionViewOrderChanged:(MDIHorizontalSectionTableViewController *)controller section:(id)section
+{
+    //NSArray *sections = controller.sections;
+    NSLog(@"section:%@ changed", section);
+}
+
+- (void)hsTableViewControllerDataOrderChanged:(MDIHorizontalSectionTableViewController *)controller data:(id)data
 {
     //NSArray *sections = controller.sections;
     //NSDictionary *dataDic = controller.dataDic;
+    NSLog(@"data:%@ changed", data);
 }
 
 #pragma mark - DataSource

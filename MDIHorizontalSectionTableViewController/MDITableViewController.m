@@ -73,12 +73,21 @@
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [self.delegate hsTableViewController:self heightForRowAtIndexPath:indexPath];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.delegate hsTableViewController:self didSelectRowAtIndexPath:indexPath];
+}
+
 static CGPoint lastPosition;
 - (void)movingViewDidStart:(MDIMovingView *)theMovingView
 {
     self.tempIndexPath = theMovingView.userInfo[@"indexPath"];
     lastPosition = [theMovingView.superview convertPoint:theMovingView.center toView:self.tableView];
-    NSLog(@"%.2f %.2f", lastPosition.x, lastPosition.y);
 }
 
 - (void)movingViewDidMove:(MDIMovingView *)theMovingView
@@ -87,8 +96,6 @@ static CGPoint lastPosition;
     BOOL goingUp = (convertedCenter.y - lastPosition.y) < 0;
     BOOL goingDown = (convertedCenter.y - lastPosition.y) > 0;
     lastPosition = convertedCenter;
-    NSLog(@"%.2f %.2f", lastPosition.x, lastPosition.y);
-    NSLog(@"%@ %@", goingUp?@"Going Up":@"-", goingDown?@"Going Down":@"-");
     CGFloat mvBottom = convertedCenter.y + theMovingView.frame.size.height/2.0;
     CGFloat mvTop = convertedCenter.y - theMovingView.frame.size.height/2.0;
     
@@ -119,7 +126,6 @@ static CGPoint lastPosition;
                     NSIndexPath *tempIP = [NSIndexPath indexPathForRow:upperIndexPath.row - 1 inSection:upperIndexPath.section];
                     self.tempIndexPath = tempIP;
                     [self.tableView insertRowsAtIndexPaths:@[tempIP] withRowAnimation:UITableViewRowAnimationAutomatic];
-                    NSLog(@"%ld %ld", self.tempIndexPath.row, self.tempIndexPath.section);
                     [self.tableView endUpdates];
                 }
             } else {
@@ -144,7 +150,6 @@ static CGPoint lastPosition;
                 NSIndexPath *tempIP = self.tempIndexPath;
                 self.tempIndexPath = [NSIndexPath indexPathForRow:self.tempIndexPath.row - 1 inSection:self.tempIndexPath.section];
                 [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:tempIP.row - 1 inSection:tempIP.section],[NSIndexPath indexPathForRow:tempIP.row inSection:tempIP.section]] withRowAnimation:UITableViewRowAnimationAutomatic];
-                NSLog(@"%ld %ld", self.tempIndexPath.row, self.tempIndexPath.section);
                 [self.tableView endUpdates];
                 return;
             }
@@ -176,7 +181,6 @@ static CGPoint lastPosition;
                     NSIndexPath *tempIP = [NSIndexPath indexPathForRow:downIndexPath.row inSection:downIndexPath.section];
                     self.tempIndexPath = tempIP;
                     [self.tableView insertRowsAtIndexPaths:@[tempIP] withRowAnimation:UITableViewRowAnimationAutomatic];
-                    NSLog(@"%ld %ld", self.tempIndexPath.row, self.tempIndexPath.section);
                     [self.tableView endUpdates];
                 }
             } else {
@@ -201,7 +205,6 @@ static CGPoint lastPosition;
                 NSIndexPath *tempIP = self.tempIndexPath;
                 self.tempIndexPath = [NSIndexPath indexPathForRow:tempIP.row+1 inSection:tempIP.section];
                 [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:tempIP.row inSection:tempIP.section],[NSIndexPath indexPathForRow:tempIP.row + 1 inSection:tempIP.section]] withRowAnimation:UITableViewRowAnimationAutomatic];
-                NSLog(@"%ld %ld", self.tempIndexPath.row, self.tempIndexPath.section);
                 [self.tableView endUpdates];
             }
         }
@@ -223,6 +226,7 @@ static CGPoint lastPosition;
             if (finished) {
                 theMovingView.center = CGPointMake(cell.contentView.bounds.size.width/2.0, cell.contentView.bounds.size.height/2.0);
                 [cell.contentView addSubview:theMovingView];
+                [self.tableView reloadData];
             }
         }];
     } else {
